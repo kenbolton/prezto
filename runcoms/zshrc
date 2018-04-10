@@ -5,9 +5,32 @@
 #   Sorin Ionescu <sorin.ionescu@gmail.com>
 #
 
+[[ $TERM == "dumb" ]] && unsetopt zle && PS1='$ ' && return
+
 # Source Prezto.
 if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
 
 # Customize to your needs...
+autoload -Uz promptinit
+promptinit
+prompt agnoster
+
+export VIRTUALENVWRAPPER_PYTHON=/usr/local/opt/python@2/bin/python2
+export WORKON_HOME=$HOME/.virtualenvs
+export PROJECT_HOME=$HOME/src
+source /usr/local/bin/virtualenvwrapper.sh
+
+# export TERM=xterm-256color
+export TERM=xterm-kitty
+
+unsetopt CORRECT
+
+expand-or-complete-with-dots() {      # This bunch of code displays red dots when autocompleting
+    echo -n "\e[31m......\e[0m"         # a command with the tab key, "Oh-my-zsh"-style.
+    zle expand-or-complete
+    zle redisplay
+}
+zle -N expand-or-complete-with-dots
+bindkey "^I" expand-or-complete-with-dots
